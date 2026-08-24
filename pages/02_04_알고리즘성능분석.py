@@ -783,23 +783,29 @@ with activity_tab:
 
 
 # =========================================================
-# ④ Python 연결
+# ④ Python 연결 + Colab 실습
 # =========================================================
 with python_tab:
 
     st.markdown(
-        "## 🐍 Python 코드로 수행 횟수를 확인해 봅시다"
+        "## 🐍 Python 코드로 알고리즘의 성능을 확인해 봅시다"
     )
 
-    st.write(
+    st.markdown(
         """
-        시간 복잡도는 단순히 코드를 실행해 시간을 재는 것보다
-        **핵심 작업이 얼마나 반복되는지**
-        살펴보면 이해하기 쉽습니다.
-        """
+앞에서 학습한 **입력 크기와 수행 횟수의 관계**를
+Python 코드로 직접 확인해 봅시다.
+
+먼저 웹앱에서 간단한 예제를 살펴본 뒤,
+Google Colab에서 입력 크기를 직접 바꾸어 실행하며
+알고리즘의 성능 변화를 관찰합니다.
+"""
     )
 
-    st.markdown("### O(n) 예제")
+    # -----------------------------------------------------
+    # 1. O(n)
+    # -----------------------------------------------------
+    st.markdown("### 1. O(n) 알고리즘")
 
     st.code(
         """
@@ -809,26 +815,33 @@ count = 0
 
 for number in numbers:
     count += 1
-    print(number)
 
 print("수행 횟수:", count)
         """.strip(),
         language="python",
     )
 
-    st.write(
+    st.markdown(
         """
-        리스트에 데이터가 5개 있으므로
-        반복문은 5번 실행됩니다.
+리스트의 모든 데이터를 한 번씩 확인하고 있습니다.
 
-        데이터가 `n`개라면 반복 횟수도 `n`번이므로
-        **O(n)**으로 생각할 수 있습니다.
-        """
+데이터가 5개이면 반복문은 5번 실행되고,
+데이터가 `n`개이면 약 `n`번 실행됩니다.
+
+따라서 이 알고리즘은 **O(n)**으로 볼 수 있습니다.
+"""
+    )
+
+    st.info(
+        "💡 입력 데이터가 2배가 되면 수행 횟수도 약 2배가 됩니다."
     )
 
     st.markdown("---")
 
-    st.markdown("### O(n²) 예제")
+    # -----------------------------------------------------
+    # 2. O(n²)
+    # -----------------------------------------------------
+    st.markdown("### 2. O(n²) 알고리즘")
 
     st.code(
         """
@@ -845,68 +858,245 @@ print("수행 횟수:", count)
         language="python",
     )
 
-    st.write(
-        """
-        바깥쪽 반복문이 5번,
-        안쪽 반복문도 매번 5번 실행됩니다.
-
-        따라서 총 수행 횟수는
-
-        **5 × 5 = 25번**입니다.
-
-        데이터가 `n`개라면
-        약 `n × n`번 실행되므로 **O(n²)**입니다.
-        """
-    )
-
     st.markdown(
-        "### 직접 예상하기"
+        """
+바깥쪽 반복문이 5번 실행되고,
+각 반복마다 안쪽 반복문도 5번씩 실행됩니다.
+
+따라서 전체 수행 횟수는
+
+**5 × 5 = 25번**
+
+입니다.
+
+데이터가 `n`개라면 약 `n × n`번 실행되므로
+**O(n²)**으로 볼 수 있습니다.
+"""
     )
+
+    st.markdown("#### 수행 횟수를 예상해 봅시다")
 
     answer = st.radio(
-        """
-        위의 이중 반복문에서
-        `numbers`에 데이터가 10개 있다면
-        `count += 1`은 몇 번 수행될까요?
-        """,
+        "데이터가 10개라면 `count += 1`은 몇 번 수행될까요?",
         [
-            "아직 선택하지 않음",
             "10번",
             "20번",
             "50번",
             "100번",
         ],
+        index=None,
         key="python_2_4_answer",
     )
 
     if answer == "100번":
 
         st.success(
-            """
-            정답입니다! ✅
-            10 × 10 = 100번 수행됩니다.
+            "정답입니다! ✅ 10 × 10 = 100번 수행됩니다."
+        )
+
+    elif answer is not None:
+
+        st.error(
+            "바깥 반복문의 실행 횟수와 안쪽 반복문의 실행 횟수를 곱해 보세요."
+        )
+
+    st.markdown("---")
+
+    # -----------------------------------------------------
+    # 3. 입력 크기에 따른 비교
+    # -----------------------------------------------------
+    st.markdown(
+        "### 3. 입력 크기가 커지면 어떻게 될까요?"
+    )
+
+    comparison_n = st.slider(
+        "입력 크기 n을 선택하세요.",
+        min_value=1,
+        max_value=100,
+        value=10,
+        step=1,
+        key="python_2_4_n",
+    )
+
+    constant_ops = 1
+    linear_ops = comparison_n
+    quadratic_ops = comparison_n ** 2
+
+    compare_cols = st.columns(3)
+
+    with compare_cols[0]:
+
+        st.metric(
+            "O(1)",
+            f"{constant_ops:,}회",
+        )
+
+    with compare_cols[1]:
+
+        st.metric(
+            "O(n)",
+            f"{linear_ops:,}회",
+        )
+
+    with compare_cols[2]:
+
+        st.metric(
+            "O(n²)",
+            f"{quadratic_ops:,}회",
+        )
+
+    if comparison_n >= 50:
+
+        st.warning(
+            f"""
+            입력 크기가 **{comparison_n}**일 때
+            O(n²)은 약 **{quadratic_ops:,}회**의 작업이 필요합니다.
+
+            입력 데이터가 커질수록 알고리즘의 성능 차이가
+            크게 나타날 수 있습니다.
             """
         )
 
-    elif answer != "아직 선택하지 않음":
+    else:
 
-        st.error(
+        st.info(
             """
-            바깥 반복문과 안쪽 반복문의
-            실행 횟수를 곱해서 생각해 보세요.
+            슬라이더를 움직여 보세요.
+            입력 크기가 증가할수록 O(n²)의 작업량이
+            매우 빠르게 증가하는 것을 확인할 수 있습니다.
             """
         )
 
     st.markdown("---")
 
-    st.info(
+    # -----------------------------------------------------
+    # 4. Colab 직접 실습
+    # -----------------------------------------------------
+    render_html(
         """
-        🚀 이후 Colab 실습에서는
-        실제로 입력 크기를 늘려가며
-        Python 코드의 실행 시간을 측정하고 비교할 수 있습니다.
+        <div class="colab-banner">
+
+            <div>
+
+                <div class="section-label">
+                    PERFORMANCE LAB
+                </div>
+
+                <h3>
+                    이제 직접 실행하고 비교해 봅시다
+                </h3>
+
+                <p>
+                    Google Colab에서 입력 데이터의 크기를
+                    직접 변경하면서 O(n)과 O(n²)의 수행 횟수와
+                    실제 실행 시간의 변화를 확인해 봅시다.
+                </p>
+
+            </div>
+
+            <div class="colab-logo">
+                ⏱️
+            </div>
+
+        </div>
         """
     )
 
+    st.markdown(
+        "### 🚀 Colab 실습 내용"
+    )
+
+    practice_cols = st.columns(4)
+
+    practice_data = [
+        (
+            "01",
+            "🔢",
+            "O(n) 수행 횟수",
+            "데이터 수를 변경하며 반복 횟수를 확인합니다.",
+        ),
+        (
+            "02",
+            "🔁",
+            "O(n²) 수행 횟수",
+            "이중 반복문의 수행 횟수를 확인합니다.",
+        ),
+        (
+            "03",
+            "📊",
+            "증가량 비교",
+            "O(1), O(n), O(n²)의 증가 차이를 비교합니다.",
+        ),
+        (
+            "04",
+            "⏱️",
+            "실행 시간 실험",
+            "입력 크기를 바꾸며 실제 실행 시간을 측정합니다.",
+        ),
+    ]
+
+    for col, (
+        step,
+        icon,
+        title,
+        description,
+    ) in zip(
+        practice_cols,
+        practice_data,
+    ):
+
+        with col:
+
+            render_html(
+                f"""
+                <div class="learning-flow-card">
+
+                    <div class="flow-step">
+                        PRACTICE {step}
+                    </div>
+
+                    <div class="flow-icon">
+                        {icon}
+                    </div>
+
+                    <h4>
+                        {title}
+                    </h4>
+
+                    <p>
+                        {description}
+                    </p>
+
+                </div>
+                """
+            )
+
+    st.markdown("---")
+
+    st.link_button(
+        "🚀 Google Colab에서 성능 분석 실습하기",
+        COLAB_URL,
+        use_container_width=True,
+        type="primary",
+    )
+
+    st.caption(
+        """
+        Colab이 새 탭에서 열리면 각 코드 셀을 실행한 뒤
+        입력 크기 값을 직접 변경하면서 결과를 비교해 보세요.
+        """
+    )
+
+    st.warning(
+        """
+        ⚠️ 실제 실행 시간은 컴퓨터 환경이나 Colab 서버 상태에 따라
+        달라질 수 있습니다.
+
+        따라서 절대적인 시간 값보다
+        **입력 크기가 커질 때 실행 시간이 증가하는 경향**에
+        주목하는 것이 중요합니다.
+        """
+    )
 
 # =========================================================
 # ⑤ 형성평가
