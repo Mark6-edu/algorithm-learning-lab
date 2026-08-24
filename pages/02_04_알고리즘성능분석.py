@@ -123,6 +123,13 @@ with st.sidebar:
         "Python 기반 알고리즘 학습"
     )
 
+COLAB_URL = (
+    "https://colab.research.google.com/github/"
+    "Mark6-edu/"
+    "algorithm-learning-lab/"
+    "blob/main/"
+    "notebooks/unit2/lesson_2_4.ipynb"
+)
 
 # =========================================================
 # Breadcrumb
