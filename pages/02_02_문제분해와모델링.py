@@ -18,6 +18,14 @@ st.set_page_config(
 
 load_css("assets/style.css")
 
+# 2-2
+COLAB_URL = (
+    "https://colab.research.google.com/github/"
+    "Mark6-edu/"
+    "algorithm-learning-lab/"
+    "blob/main/"
+    "notebooks/unit2/lesson_2_2.ipynb"
+)
 
 # =========================================================
 # 세션 상태 초기화
@@ -678,7 +686,7 @@ with activity_tab:
 
 
 # =========================================================
-# ④ Python 연결
+# ④ Python 연결 + Colab 실습
 # =========================================================
 with python_tab:
 
@@ -686,30 +694,41 @@ with python_tab:
         "## 🐍 모델을 Python으로 표현해 봅시다"
     )
 
-    st.write(
+    st.markdown(
         """
-        앞에서 만든 모델을 Python으로 표현하면
-        문제의 구조가 코드에서 어떻게 나타나는지 확인할 수 있습니다.
-        """
+앞에서 학습한 **문제 분해 → 추상화 → 모델링** 과정이
+Python 코드에서는 어떻게 표현되는지 확인해 봅시다.
+
+이후 Google Colab에서 직접 값을 변경하고
+간단한 문제 모델을 만들어 봅니다.
+"""
     )
 
-    st.markdown("### 문제 모델")
+    st.markdown("### 1. 문제 분해")
+
+    st.markdown(
+        """
+스마트 교실의 온도를 관리하는 문제를
+다음과 같은 작은 작업으로 나눌 수 있습니다.
+
+1. 현재 온도를 확인한다.
+2. 기준 온도를 설정한다.
+3. 두 값을 비교한다.
+4. 선풍기 상태를 결정한다.
+"""
+    )
 
     st.code(
         """
-입력
- └─ 현재 온도
-
-처리
- └─ 기준 온도와 비교
-
-출력
- └─ 선풍기 상태
+current_temp = 29
+standard_temp = 28
         """.strip(),
-        language="text",
+        language="python",
     )
 
-    st.markdown("### Python 코드")
+    st.markdown("---")
+
+    st.markdown("### 2. 추상화와 모델링")
 
     st.code(
         """
@@ -726,50 +745,27 @@ print(fan)
         language="python",
     )
 
-    st.markdown("### 모델과 코드 연결")
-
-    st.dataframe(
-        {
-            "모델 요소": [
-                "현재 온도",
-                "기준 온도",
-                "비교",
-                "출력 상태",
-            ],
-            "Python 표현": [
-                "current_temp",
-                "standard_temp",
-                "if current_temp >= standard_temp",
-                "fan",
-            ],
-        },
-        hide_index=True,
-        width="stretch",
-    )
-
     st.info(
         """
-        💡 좋은 모델을 만들면
-        Python 코드도 더 단순하고 이해하기 쉽게 작성할 수 있습니다.
+        💡 문제 해결에 필요한 핵심 요소만 남겼습니다.
+
+        - 현재 온도
+        - 기준 온도
+        - 선풍기 상태
         """
     )
 
-    st.markdown("---")
-
-    st.markdown("### 출력 결과 예상")
+    st.markdown("#### 출력 결과를 예상해 봅시다")
 
     answer = st.radio(
-        """
-        `current_temp = 29`, `standard_temp = 28`일 때
-        출력 결과는 무엇일까요?
-        """,
+        "`current_temp = 29`, `standard_temp = 28`일 때 결과는 무엇일까요?",
         [
-            "아직 선택하지 않음",
             "ON",
             "OFF",
             "29",
             "28",
         ],
+        index=None,
         key="python_2_2_answer",
     )
 
@@ -778,17 +774,155 @@ print(fan)
         st.success(
             """
             정답입니다! ✅
-            현재 온도가 기준 온도 이상이므로
-            선풍기는 ON 상태가 됩니다.
+            현재 온도가 기준 온도 이상이므로 선풍기는 ON 상태가 됩니다.
             """
         )
 
-    elif answer != "아직 선택하지 않음":
+    elif answer is not None:
 
         st.error(
             "`current_temp >= standard_temp` 조건을 다시 확인해 보세요."
         )
 
+    st.markdown("---")
+
+    st.markdown("### 3. 데이터를 모델로 표현하기")
+
+    st.code(
+        """
+book = {
+    "title": "알고리즘 설계",
+    "available": True,
+    "location": "A-03"
+}
+
+print(book["title"])
+print(book["available"])
+        """.strip(),
+        language="python",
+    )
+
+    st.info(
+        """
+        💡 현실의 책 전체를 표현하는 것이 아니라,
+        문제 해결에 필요한 정보만 선택하여 모델링한 것입니다.
+        """
+    )
+
+    st.markdown("---")
+
+    render_html(
+        """
+        <div class="colab-banner">
+
+            <div>
+
+                <div class="section-label">
+                    MODELING LAB
+                </div>
+
+                <h3>
+                    문제를 나누고 모델로 표현해 봅시다
+                </h3>
+
+                <p>
+                    Google Colab에서 문제를 작은 작업으로 나누고,
+                    필요한 정보만 추출하여 Python 데이터와 코드로
+                    표현해 봅니다.
+                </p>
+
+            </div>
+
+            <div class="colab-logo">
+                🧩
+            </div>
+
+        </div>
+        """
+    )
+
+    st.markdown("### 🚀 Colab 실습 내용")
+
+    practice_cols = st.columns(4)
+
+    practice_data = [
+        (
+            "01",
+            "🧩",
+            "문제 분해",
+            "온도 관리 문제를 작은 작업으로 나눕니다.",
+        ),
+        (
+            "02",
+            "🔍",
+            "추상화",
+            "문제 해결에 필요한 정보만 선택합니다.",
+        ),
+        (
+            "03",
+            "🗺️",
+            "모델링",
+            "핵심 요소를 Python 데이터로 표현합니다.",
+        ),
+        (
+            "04",
+            "📚",
+            "도전 문제",
+            "도서 대출 가능 여부 프로그램을 구현합니다.",
+        ),
+    ]
+
+    for col, (
+        step,
+        icon,
+        title,
+        description,
+    ) in zip(
+        practice_cols,
+        practice_data,
+    ):
+
+        with col:
+
+            render_html(
+                f"""
+                <div class="learning-flow-card">
+
+                    <div class="flow-step">
+                        PRACTICE {step}
+                    </div>
+
+                    <div class="flow-icon">
+                        {icon}
+                    </div>
+
+                    <h4>
+                        {title}
+                    </h4>
+
+                    <p>
+                        {description}
+                    </p>
+
+                </div>
+                """
+            )
+
+    st.markdown("---")
+
+    st.link_button(
+        "🚀 Google Colab에서 모델링 실습하기",
+        COLAB_URL,
+        use_container_width=True,
+        type="primary",
+    )
+
+    st.caption(
+        """
+        Colab에서 각 코드 셀을 실행하고
+        온도 값, 도서 정보 등을 직접 수정해 보세요.
+        """
+    )
 
 # =========================================================
 # ⑤ 형성평가

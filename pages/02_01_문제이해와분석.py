@@ -18,6 +18,14 @@ st.set_page_config(
 
 load_css("assets/style.css")
 
+# 2-1
+COLAB_URL = (
+    "https://colab.research.google.com/github/"
+    "Mark6-edu/"
+    "algorithm-learning-lab/"
+    "blob/main/"
+    "notebooks/unit2/lesson_2_1.ipynb"
+)
 
 # =========================================================
 # 세션 상태 초기화
@@ -629,7 +637,7 @@ with activity_tab:
 
 
 # =========================================================
-# 4. Python 연결
+# ④ Python 연결 + Colab 실습
 # =========================================================
 with python_tab:
 
@@ -637,15 +645,37 @@ with python_tab:
         "## 🐍 문제 분석을 Python으로 연결해 봅시다"
     )
 
-    st.write(
+    st.markdown(
         """
-        문제를 분석한 후에는
-        각 요소가 Python 코드에서 어떻게 표현되는지
-        연결해서 생각할 수 있습니다.
+앞에서 학습한 **현재 상태, 목표 상태, 필요한 작업**이
+Python 문제 해결 과정에서는 어떻게 연결되는지 살펴봅시다.
+
+예제를 확인한 뒤에는 Google Colab에서
+직접 값을 바꾸고 코드를 실행해 봅니다.
+"""
+    )
+
+    st.markdown("### 1. 문제 상황")
+
+    st.code(
+        """
+scores = [78, 92, 85, 67, 95]
+
+print(scores)
+        """.strip(),
+        language="python",
+    )
+
+    st.info(
+        """
+        💡 현재 상태:
+        여러 점수가 있지만 아직 가장 높은 점수를 모릅니다.
         """
     )
 
-    st.markdown("### Python 코드")
+    st.markdown("---")
+
+    st.markdown("### 2. 필요한 작업")
 
     st.code(
         """
@@ -662,56 +692,148 @@ print(max_score)
         language="python",
     )
 
-    st.markdown("### 코드와 문제 분석 연결")
-
-    st.dataframe(
-        {
-            "문제 분석": [
-                "학생들의 점수",
-                "비교 기준 설정",
-                "모든 점수 확인",
-                "더 큰 값 확인",
-                "목표 상태",
-            ],
-            "Python 표현": [
-                "scores",
-                "max_score = scores[0]",
-                "for score in scores",
-                "if score > max_score",
-                "print(max_score)",
-            ],
-        },
-        hide_index=True,
-        width="stretch",
+    st.success(
+        """
+        🎯 목표 상태:
+        모든 점수를 비교하여 가장 높은 점수인 95를 찾았습니다.
+        """
     )
 
+    st.markdown("#### 출력 결과를 예상해 봅시다")
+
     answer = st.radio(
-        "위 Python 코드의 출력 결과는 무엇일까요?",
+        "위 코드의 출력 결과는 무엇일까요?",
         [
-            "아직 선택하지 않음",
-            "67",
             "78",
+            "85",
             "92",
             "95",
         ],
-        key="python_output_2_1",
+        index=None,
+        key="python_2_1_answer",
     )
 
     if answer == "95":
+        st.success("정답입니다! ✅")
 
-        st.success(
-            "정답입니다! ✅ 가장 높은 점수는 95입니다."
-        )
-
-    elif answer != "아직 선택하지 않음":
-
+    elif answer is not None:
         st.error(
-            """
-            다시 생각해 봅시다.
-            max_score가 어떤 경우에 변경되는지 확인해 보세요.
-            """
+            "max_score가 어떤 경우에 변경되는지 다시 확인해 보세요."
         )
 
+    st.markdown("---")
+
+    render_html(
+        """
+        <div class="colab-banner">
+
+            <div>
+
+                <div class="section-label">
+                    PROBLEM ANALYSIS LAB
+                </div>
+
+                <h3>
+                    직접 문제를 분석하고 실행해 봅시다
+                </h3>
+
+                <p>
+                    Google Colab에서 현재 상태와 목표 상태를 확인하고,
+                    필요한 작업을 Python 코드로 직접 구현해 봅니다.
+                </p>
+
+            </div>
+
+            <div class="colab-logo">
+                🔎
+            </div>
+
+        </div>
+        """
+    )
+
+    st.markdown("### 🚀 Colab 실습 내용")
+
+    practice_cols = st.columns(4)
+
+    practice_data = [
+        (
+            "01",
+            "📍",
+            "현재 상태",
+            "주어진 데이터와 문제 상황을 확인합니다.",
+        ),
+        (
+            "02",
+            "⚙️",
+            "필요한 작업",
+            "최댓값을 찾는 비교 과정을 구현합니다.",
+        ),
+        (
+            "03",
+            "🎯",
+            "목표 상태",
+            "입력·처리·출력의 관계를 확인합니다.",
+        ),
+        (
+            "04",
+            "🏆",
+            "도전 문제",
+            "세 수 중 가장 큰 값을 찾아봅니다.",
+        ),
+    ]
+
+    for col, (
+        step,
+        icon,
+        title,
+        description,
+    ) in zip(
+        practice_cols,
+        practice_data,
+    ):
+
+        with col:
+
+            render_html(
+                f"""
+                <div class="learning-flow-card">
+
+                    <div class="flow-step">
+                        PRACTICE {step}
+                    </div>
+
+                    <div class="flow-icon">
+                        {icon}
+                    </div>
+
+                    <h4>
+                        {title}
+                    </h4>
+
+                    <p>
+                        {description}
+                    </p>
+
+                </div>
+                """
+            )
+
+    st.markdown("---")
+
+    st.link_button(
+        "🚀 Google Colab에서 문제 분석 실습하기",
+        COLAB_URL,
+        use_container_width=True,
+        type="primary",
+    )
+
+    st.caption(
+        """
+        Colab에서 각 코드 셀을 실행한 뒤
+        데이터 값을 직접 수정하면서 결과 변화를 확인해 보세요.
+        """
+    )
 
 # =========================================================
 # 5. 형성평가
